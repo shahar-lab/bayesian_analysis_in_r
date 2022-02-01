@@ -72,5 +72,5 @@ group_vec=df$reward_oneback
 #posterior_predictive_check
 yrep=posterior_predict(model)
 ppc_stat_grouped(y, yrep, group_vec$reward_oneback)
-``
+```
 
