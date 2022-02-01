@@ -64,11 +64,10 @@ my_posteriorplot(x       = posterior_samples$b_reward_onebackrewarded,
 
 ```
 #set empirical y estimates (should be numeric)
-y   =df%>%filter(reoffer_ch==F,reoffer_unch==T)%>%mutate(stay_frc_unch=stay_frc_unch*1)%>%select(stay_frc_unch)%>%as.vector
-y   =as.numeric(y$stay_frc_unch)
+y   =as.numeric(df$stay)
 
-#set panel factor (e.g., unrewarded vs rewarded_
-group_vec=df%>%filter(reoffer_ch==F,reoffer_unch==T)%>%select(reward_oneback)
+#set panel factor (e.g., unrewarded vs rewarded - should be a factor var)
+group_vec=df$reward_oneback
 
 #posterior_predictive_check
 yrep=posterior_predict(model)
