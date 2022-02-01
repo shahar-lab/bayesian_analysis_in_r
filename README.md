@@ -6,11 +6,11 @@ This includes some typical R code that we use in the lab
 ### logistic regression
 ```
 mypriors=c(set_prior(prior = "normal(0,0.2)", class = "b",coef = "Intercept"),
-             set_prior(prior = "normal(0,0.4)", class = "b",coef = "reward_onebackrewarded"))
+           set_prior(prior = "normal(0,0.2)", class = "b",coef = "reward_oneback"))
 
  
-model= brm(stay_frc_unch ~ 0 + Intercept+reward_oneback+(1+reward_oneback| subject), 
-           data = df%>%filter(reoffer_ch==F,reoffer_unch==T), 
+model= brm(stay ~ 0 + Intercept+reward_oneback+(1+reward_oneback| subject), 
+           data = df%>%filter(reoffer_ch==T), 
            family = bernoulli(link = "logit"),
            warmup = 1000,
            iter = 2000,    
@@ -18,7 +18,7 @@ model= brm(stay_frc_unch ~ 0 + Intercept+reward_oneback+(1+reward_oneback| subje
            chains=4,
            prior=mypriors)
 
-save(model,file='./data/empirical_data/brms_unchosen_wide_priors.rdata')
+save(model,file='./data/empirical_data/brms_weakly_informative_priors.rdata')
 ```
 ### exmine  mcmc
 ```
@@ -47,13 +47,13 @@ plot(mybayes)
 plot(conditional_effects(model,effect='reward_oneback'), plot = FALSE)[[1]] + 
   ggtitle("(A) empirical data") + 
   xlab("previous-outcome") +
-  ylab("pStay(unchosen)") + theme_bw()+
+  ylab("pStay") + theme_bw()+
   scale_x_discrete(labels=c("Unrewarded","Rewarded"))
 
 #plot historgram for posterior samples
 library(RLR)
 posterior_samples = insight::get_parameters(model)
-my_posteriorplot(x       = posterior_samples$b_reward_onebackrewarded,
+my_posteriorplot(x       = posterior_samples$b_reward_oneback,
                  myxlim  = c(-.75,+.25),
                  my_vline= 0, 
                  myxlab  = expression(beta['previous-outcome']),
