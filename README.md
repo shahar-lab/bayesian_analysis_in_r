@@ -73,4 +73,23 @@ group_vec=df$reward_oneback
 yrep=posterior_predict(model)
 ppc_stat_grouped(y, yrep, group_vec$reward_oneback)
 ```
+### model comparision
+you might want to comapre which model fits better to your data. 
+e.g., you might have several brms models, and would like to find which set of predictors is most sutiable. 
 
+```
+library(loo)
+#run loo
+model2 <- loo(model2)
+model1 <- loo(model1)
+model0 <- loo(model0)
+
+#compare with loo
+loo_compare(model2,model1,model0)
+
+#stacking weights
+stack_models <- cbind(model2$pointwise[,"elpd_loo"],
+                      model1$pointwise[,"elpd_loo"],
+                      model0$pointwise[,"elpd_loo"])
+stacking_weights(stack_models)
+```
