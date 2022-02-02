@@ -77,6 +77,7 @@ ppc_stat_grouped(y, yrep, group_vec$reward_oneback)
 you might want to comapre which model fits better to your data. 
 e.g., you might have several brms models, and would like to find which set of predictors is most sutiable. 
 
+using loo:
 ```
 library(loo)
 #run loo
@@ -92,4 +93,13 @@ stack_models <- cbind(model2$pointwise[,"elpd_loo"],
                       model1$pointwise[,"elpd_loo"],
                       model0$pointwise[,"elpd_loo"])
 stacking_weights(stack_models)
+```
+
+using bridge_sampler:
+```
+#compare with bayesfactor_models
+BF_model_comparison <- bayesfactor_models(model1,model2, denominator =model0)
+BF_model_comparison
+BF_model_inclusion =bayesfactor_inclusion(BF_model_comparison_unch)
+
 ```
