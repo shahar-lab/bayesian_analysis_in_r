@@ -103,3 +103,26 @@ BF_model_comparison
 BF_model_inclusion =bayesfactor_inclusion(BF_model_comparison_unch)
 
 ```
+
+### contrasts
+after fitting you model you might want to run some specific contrasts, which can be easily computed using emmeans.
+e.g., say we predict 'stay' with 'reward_oneback' and 'condition'. let's also assume that 'condition' is a factor variable with three levels A,B and C.
+then brms will produce two dummy variabels for 'condition', but you might want to be more specific. You might for example want to check whether the reward effect in C is different from both A and B, or check seperately whether the reward effect is different for A vs B, A vs C and B vs C with out refitting the model.
+
+```
+#brms fit
+model= brm(stay ~ reward_oneback*condition+(reward_oneback*condition| subject), 
+           data = df, 
+           family = bernoulli(link = "logit"))
+
+#create and plot an emmeans object
+em=emmeans::emmeans(model,~reward_n1back*cue_n1back)
+plot(em)
+
+#produce your own comparisions by given weights to each of the six levels (2 for reward_oneback X 3 for condition)
+cont=
+emmeans::contrast(em, list('A   vs. B'=c(-1, 1, 1,-1, 0, 0),
+                           'A   vs. C'=c(-1, 1, 0, 0, 1,-1),
+                           'B   vs. C'=c( 0, 0,-1, 1, 1,-1),
+                           'A+B vs. C'=c(-1, 1,-1, 1, 2,-2)))
+```
