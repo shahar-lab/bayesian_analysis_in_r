@@ -17,8 +17,9 @@ model= brm(stay ~ 0 + Intercept+reward_oneback+(1+reward_oneback| subject),
            cores =4,
            chains=4,
            prior=mypriors)
-
 save(model,file='./data/empirical_data/brms_weakly_informative_priors.rdata')
+#use the update function to run a similar model.
+fit_only_intercept = update(model,formula. = -reward_oneback)
 ```
 ### exmine  mcmc
 ```
