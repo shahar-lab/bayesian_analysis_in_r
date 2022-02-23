@@ -127,3 +127,6 @@ emmeans::contrast(em, list('A   vs. B'=c(-1, 1, 1,-1, 0, 0),
                            'B   vs. C'=c( 0, 0,-1, 1, 1,-1),
                            'A+B vs. C'=c(-1, 1,-1, 1, 2,-2)))
 ```
+### power analysis
+Unlike in NHST (null-hypothesis-significance-testing), Bayesian analysis focuses on parameter estimation. Thus, we are not focusing on the chance of obtaining a specific point-estimate (e.g point-null hypothesis) but are satisfied with **precisly** estimating our parameter of interest. Our "criterion of interest" will therefore be whether or not our Credible Interval (CI) is narrow enough for us to be certain about our results.
+**code will follow**
