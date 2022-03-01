@@ -130,7 +130,7 @@ emmeans::contrast(em, list('A   vs. B'=c(-1, 1, 1,-1, 0, 0),
 ### power analysis
 Unlike in NHST (null-hypothesis-significance-testing), Bayesian analysis focuses on parameter estimation. Thus, we are not focusing on the chance of obtaining a specific point-estimate (e.g point-null hypothesis) but are satisfied with **precisly** estimating our parameter of interest. Our "criterion of interest" will therefore be whether or not our Credible Interval (CI) is narrow enough for us to be certain about our results. 
 
-The following code simulates a power analysis for a simple linear regression model having only an intercept.
+The following code simulates a power analysis for a simple linear regression model having only an intercept (it takes a while to run).
 ```
 library(brms)
 library(cmdstanr)
