@@ -131,14 +131,15 @@ emmeans::contrast(em, list('A   vs. B'=c(-1, 1, 1,-1, 0, 0),
 Unlike in NHST (null-hypothesis-significance-testing), Bayesian analysis focuses on parameter estimation. Thus, we are not focusing on the chance of obtaining a specific point-estimate (e.g point-null hypothesis) but are satisfied with **precisly** estimating our parameter of interest. Our "criterion of interest" will therefore be whether or not our Credible Interval (CI) is narrow enough for us to be certain about our results. 
 
 The following code simulates a power analysis for a simple linear regression model having only an intercept.
-```library(brms)
+```
+library(brms)
 library(cmdstanr)
 library(bayestestR)
 library(dplyr)
 #Power analysis
 possible_Nsubjects = seq(25, 100, by = 25)
 Ntrials = 50
-Nsimulations = 10
+Nsimulations = 50
 # Define prior model
 df    = data.frame(y=0) # data has just the minimal number of rows to let brm know what the various
 # predictors look like (levels, nesting...)
@@ -206,5 +207,5 @@ for (Nsubjects in possible_Nsubjects) {
 precision_criterion = 0.15 #the minimal CI width we want
 power_df_all= power_df_all%>%mutate(criterion=(CI_width<precision_criterion)*1)
 power = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(criterion))
-save(file="power.Rdata")
+power_df_all%>%group_by(sample_size)%>%summarise(mean(CI_width))
 ```
