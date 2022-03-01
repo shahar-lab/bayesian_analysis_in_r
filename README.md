@@ -128,7 +128,9 @@ emmeans::contrast(em, list('A   vs. B'=c(-1, 1, 1,-1, 0, 0),
                            'A+B vs. C'=c(-1, 1,-1, 1, 2,-2)))
 ```
 ### power analysis
-Unlike in NHST (null-hypothesis-significance-testing), Bayesian analysis focuses on parameter estimation. Thus, we are not focusing on the chance of obtaining a specific point-estimate (e.g point-null hypothesis) but are satisfied with **precisly** estimating our parameter of interest. Our "criterion of interest" will therefore be whether or not our Credible Interval (CI) is narrow enough for us to be certain about our results.
+Unlike in NHST (null-hypothesis-significance-testing), Bayesian analysis focuses on parameter estimation. Thus, we are not focusing on the chance of obtaining a specific point-estimate (e.g point-null hypothesis) but are satisfied with **precisly** estimating our parameter of interest. Our "criterion of interest" will therefore be whether or not our Credible Interval (CI) is narrow enough for us to be certain about our results. 
+
+The following code simulates a power analysis for a simple linear regression model having only an intercept.
 ```
 library(brms)
 library(cmdstanr)
@@ -137,7 +139,7 @@ library(dplyr)
 #Power analysis
 possible_Nsubjects = seq(10, 100, by = 10)
 Ntrials = 100
-Nsimulations = 50
+Nsimulations = 50 # decrease this number if your computer lacks memory
 # Define prior model
 df    = data.frame(y=0) # data has just the minimal number of rows to let brm know what the various
 # predictors look like (levels, nesting...)
