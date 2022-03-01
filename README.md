@@ -129,4 +129,78 @@ emmeans::contrast(em, list('A   vs. B'=c(-1, 1, 1,-1, 0, 0),
 ```
 ### power analysis
 Unlike in NHST (null-hypothesis-significance-testing), Bayesian analysis focuses on parameter estimation. Thus, we are not focusing on the chance of obtaining a specific point-estimate (e.g point-null hypothesis) but are satisfied with **precisly** estimating our parameter of interest. Our "criterion of interest" will therefore be whether or not our Credible Interval (CI) is narrow enough for us to be certain about our results.
-**code will follow**
+```
+library(brms)
+library(cmdstanr)
+library(bayestestR)
+library(dplyr)
+#Power analysis
+possible_Nsubjects = seq(10, 100, by = 10)
+Ntrials = 100
+Nsimulations = 50
+# Define prior model
+df    = data.frame(y=0) # data has just the minimal number of rows to let brm know what the various
+# predictors look like (levels, nesting...)
+
+#priors are based on preliminary findings or on "ideal" results
+prior = c(set_prior(
+  prior = "normal(0,0.5)",class = "b",coef = "Intercept"),
+  set_prior(
+  prior = "cauchy(0,0.5)",class = "sigma"))
+
+#data generating model using the priors
+model = brm(y~0 + Intercept,prior=prior,sample_prior = 'only',data=df,backend = "cmdstanr")
+#define df for results of criterion
+power_df=data.frame(simul=seq(1:Nsimulations),CI_width=rep(NA,Nsimulations))
+#sanity check for hdi
+hdi(model)
+hdi(rnorm(100000,0,0.5))
+
+# Function that makes x data
+generate_x = function(Nsubjects, Ntrials) {
+    df = data.frame(
+      subject = rep(seq(1, Nsubjects), each = Ntrials),
+      trial = rep(seq(1, Ntrials), Nsubjects),
+      RT = rnorm(
+        Nsubjects * Ntrials,
+        400,
+        50
+      )
+    )
+    return(df)
+  }
+
+for (Nsubjects in possible_Nsubjects) {
+  #we create x data for each sample size using this function
+  x_data = generate_x(Nsubjects = Nsubjects, Ntrials=Ntrials)
+  
+  #every draw from the posterior distribution is like a new study
+  #the posterior_predictive_distribution (PPD) will have the structure of Ndraws X Nobservations.
+  #thus, the number of rows refers to the number of studies on which we will loop.
+  PPD = posterior_predict(model, newdata = x_data, ndraw = Nsimulations, replace = TRUE) 
+  
+  for (i in 1:nrow(PPD)) {
+    # make full data by combining the x data and y data
+    temp_data = x_data
+    
+    #adding each iteration the whole row as the y variable to the x data
+    temp_data$y <- PPD[i, ]
+    
+    # estimate sub model for the current draw from the posterior
+    # use priors that you put in the prereg - NOT the ones for the gen-model.
+    fit_prior = c(set_prior(
+      prior = "normal(0,0.2)",class = "b",coef = "Intercept"),
+      set_prior(
+        prior = "cauchy(0,0.2)",class = "sigma"))
+    
+    temp_model <- brm(y~0 + Intercept, data = temp_data, 
+                      sample_prior = FALSE,
+                      prior = fit_prior, 
+                      backend = "cmdstanr")
+    
+    # get HDI / estimate / ROPE according to your criterion
+    CI_width=hdi(temp_model,parameters="Intercept")[[4]] - hdi(temp_model,parameters="Intercept")[[3]]
+    power_df[i,"CI_width"] = CI_width
+  }
+}
+```
