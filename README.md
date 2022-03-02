@@ -3,6 +3,27 @@ This includes some typical R code that we use in the lab
 
 ## BRMS package
 
+brms is a package which wraps stan code for regression analysis in the common base R format of y~x like in lm and glm functions.
+
+## Installation
+To use brms you need to install both brms and rstan (stan for R). We start by deleting any disturbing files:
+```
+remove.packages("rstan")
+if (file.exists(".RData")) file.remove(".RData")
+```
+We then install rstan
+```
+install.packages("rstan")
+```
+We verify the installation was succesfull by running an example model using data which is within the package:
+```
+example(stan_model, package = "rstan", run.dontrun = TRUE)
+```
+We now install brms package:
+```
+install.packages("brms")
+```
+
 ### logistic regression
 ```
 mypriors=c(set_prior(prior = "normal(0,0.2)", class = "b",coef = "Intercept"),
