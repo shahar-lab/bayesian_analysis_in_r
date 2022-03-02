@@ -5,7 +5,7 @@ This includes some typical R code that we use in the lab
 
 brms is a package which wraps stan code for regression analysis in the common base R format of y~x like in lm and glm functions.
 
-# Installation
+### Installation
 To use brms you need to install both brms and rstan (stan for R). We start by deleting any disturbing files:
 ```
 remove.packages("rstan")
@@ -229,4 +229,99 @@ precision_criterion = 0.15 #the minimal CI width we want
 power_df_all= power_df_all%>%mutate(criterion=(CI_width<precision_criterion)*1)
 power = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(criterion))
 power_df_all%>%group_by(sample_size)%>%summarise(mean(CI_width))
+```
+
+More commonly, you will run a logistic regression which means your y variable is dichotomous and thus the link function between the predictor and the y variable is a binomial or a bernoulli function and not a gaussian. The output variable will correspond to the logit or log-odds and can then be transformed to probability.
+
+Here is an example for power analysis with a logistic regression:
+```
+library(brms)
+library(cmdstanr)
+library(bayestestR)
+library(dplyr)
+library(RLR)
+#Power analysis
+possible_Nsubjects = seq(25, 100, by = 25)
+Ntrials = 125
+Nsimulations = 50
+# Define prior model
+# data has just the minimal number of rows to let brm know what the various
+# predictors look like (levels, nesting...)
+df    = data.frame(subject=rep(1,2),generalize=rep(1,2),reward_oneback=as.factor(c(0,1)))
+#priors are based on preliminary findings or on "ideal" results
+prior = c(set_prior(
+  prior = "normal(0.1,0.15)",class = "b",coef = "Intercept"),
+  set_prior(
+    prior = "normal(0.3,0.2)",class = "b",coef = "reward_oneback"))
+#data generating model using the priors
+model = brm(generalize~0 + Intercept+reward_oneback,
+            prior=prior,
+            sample_prior = 'only',
+            data=df,
+            family = bernoulli(link="logit"),
+            backend = "cmdstanr")
+
+#sanity check for hdi
+hdi(model)
+hdi(rnorm(100000,0.3,0.2)) #put here the mean and sd of your prior
+# Function that makes x data
+generate_x = function(Nsubjects, Ntrials) {
+  df = data.frame(
+    subject = rep(seq(1, Nsubjects), each = Ntrials),
+    trial = rep(seq(1, Ntrials), Nsubjects),
+    reward_oneback = as.factor(sample(c(0,1),Nsubjects*Ntrials,replace = TRUE))
+  )
+  return(df)
+}
+#define df for results of criterion
+power_df_all=data.frame()
+for (Nsubjects in possible_Nsubjects) {
+  power_df=data.frame(sample_size =rep(Nsubjects,Nsimulations),Median=rep(NA,Nsimulations),CI_width=rep(NA,Nsimulations),zero_criterion=rep(NA,Nsimulations))
+  #we create x data for each sample size using this function
+  x_data = generate_x(Nsubjects = Nsubjects, Ntrials=Ntrials)
+  #every draw from the posterior distribution is like a new study
+  #the posterior_predictive_distribution (PPD) will have the structure of Ndraws X Nobservations.
+  #thus, the number of rows refers to the number of studies on which we will loop.
+  PPD = posterior_predict(model, newdata = x_data, ndraw = Nsimulations)
+  for (i in 1:nrow(PPD)) {
+    # make full data by combining the x data and y data
+    temp_data = x_data
+    #adding each iteration the whole row as the y variable to the x data
+    temp_data$generalize <- PPD[i, ]
+    # estimate sub model for the current draw from the posterior
+    # use priors that you put in the prereg - NOT the ones for the gen-model.
+    fit_prior = c(
+      set_prior(
+        prior = "normal(0,0.2)",
+        class = "b",
+        coef = "Intercept"
+      ),
+      set_prior(
+        prior = "normal(0,0.2)",
+        class = "b",
+        coef = "reward_oneback1"),
+      )
+    temp_model <- brm(generalize ~ 0+Intercept+reward_oneback,
+                      data = temp_data,
+                      sample_prior = FALSE,
+                      prior = fit_prior,
+                      family = bernoulli(link="logit"),
+                      backend = "cmdstanr")
+    # get HDI / estimate / ROPE according to your criterion
+    Median=fixef(temp_model,pars="reward_oneback1")[[1]]
+    power_df[i,"Median"] = Median
+    CI_width=hdi(temp_model,parameters="reward_oneback1")[[4]] - hdi(temp_model,parameters="reward_oneback1")[[3]]
+    power_df[i,"CI_width"] = CI_width
+    #check if zero is in the hdi by multiplying the two edges of the hdi
+    zero_criterion=(hdi(temp_model,parameters="reward_oneback1")[[4]] * hdi(temp_model,parameters="reward_oneback1")[[3]])>0
+    power_df[i,"zero_criterion"] = zero_criterion
+  }
+  power_df_all=rbind(power_df_all,power_df)
+}
+#check power criterion
+precision_criterion = 0.2 #the minimal CI width we want
+power_df_all= power_df_all%>%mutate(criterion=(CI_width<precision_criterion)*1)
+save(power_df_all,file="power_df_all.Rdata")
+power = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(criterion))
+CI_width_by_sample_size = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(CI_width))
 ```
