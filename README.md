@@ -5,7 +5,7 @@ This includes some typical R code that we use in the lab
 
 brms is a package which wraps stan code for regression analysis in the common base R format of y~x like in lm and glm functions.
 
-## Installation
+# Installation
 To use brms you need to install both brms and rstan (stan for R). We start by deleting any disturbing files:
 ```
 remove.packages("rstan")
