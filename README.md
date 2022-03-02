@@ -230,7 +230,7 @@ power_df_all= power_df_all%>%mutate(criterion=(CI_width<precision_criterion)*1)
 power = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(criterion))
 power_df_all%>%group_by(sample_size)%>%summarise(mean(CI_width))
 ```
-
+### logistic regression power analysis
 More commonly, you will run a logistic regression which means your y variable is dichotomous and thus the link function between the predictor and the y variable is a binomial or a bernoulli function and not a gaussian. The output variable will correspond to the logit or log-odds and can then be transformed to probability.
 
 Here is an example for power analysis with a logistic regression:
