@@ -23,7 +23,31 @@ We now install brms package:
 ```
 install.packages("brms")
 ```
+After installing rstan and brms you are good to go, but may still get extra speed by using "cmdstanr" package. 
+This package enables your model to run without some unneccessary waste of time as is described <a href="http://mc-stan.org/cmdstanr/articles/cmdstanr.html#introduction-1">here</a> 
 
+Steps to install cmdstanr:
+1)Restart R session
+
+2)Install cmdstan R package (check the link above for updates from the time of this being written)
+```
+install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+```
+3)Call the library
+```
+library(cmdstanr)
+```
+4)Check your computer is ready for this!
+```
+check_cmdstan_toolchain()
+```
+5)Install cmdstan 
+```
+install_cmdstan(cores = 2)
+```
+That should be enough but check the outputs in the console.
+You can now use the backend = "cmdstanr" argument when calling a brms or a stan fitting function.
+Bare in mind that you won't have access to marginal likelihoods if you want to calculate Bayesfactors.
 ### logistic regression
 ```
 mypriors=c(set_prior(prior = "normal(0,0.2)", class = "b",coef = "Intercept"),
