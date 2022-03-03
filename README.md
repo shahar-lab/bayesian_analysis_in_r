@@ -64,7 +64,7 @@ model= brm(stay ~ 0 + Intercept+reward_oneback+(1+reward_oneback| subject),
            chains=4,
            prior=mypriors)
 save(model,file='./data/empirical_data/brms_weakly_informative_priors.rdata')
-#use the update function to run a similar model.
+#use the update function to run a similar model without having it to recompile the model. You may use it when giving newdata or different priors as can be seen here <a href="https://rdrr.io/cran/brms/man/update.brmsfit.html">here</a>
 fit_only_intercept = update(model,formula. = -reward_oneback)
 ```
 ### exmine  mcmc
