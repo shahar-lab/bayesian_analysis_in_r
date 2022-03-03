@@ -27,6 +27,7 @@ After installing rstan and brms you are good to go, but may still get extra spee
 This package enables your model to run without some unneccessary waste of time as is described <a href="http://mc-stan.org/cmdstanr/articles/cmdstanr.html#introduction-1">here</a> 
 
 Steps to install cmdstanr:
+
 1)Restart R session
 
 2)Install cmdstan R package (check the link above for updates from the time of this being written)
