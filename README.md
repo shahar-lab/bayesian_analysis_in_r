@@ -70,9 +70,8 @@ fit_only_intercept = update(model,formula. = -reward_oneback)
 ```
 ### exmine  mcmc
 ```
-library(bayesplot)
-mcmc_trace(model)
-mcmc_pairs(model)
+plot(model)
+pairs(model)
 ```
 
 ### examine posterior distrbution - statistics
