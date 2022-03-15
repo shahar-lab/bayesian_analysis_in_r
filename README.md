@@ -51,6 +51,7 @@ You can now use the backend = "cmdstanr" argument when calling a brms or a stan 
 Bare in mind that you won't have access to marginal likelihoods if you want to calculate Bayesfactors.
 ### logistic regression
 ```
+library(brms)
 mypriors=c(set_prior(prior = "normal(0,0.2)", class = "b",coef = "Intercept"),
            set_prior(prior = "normal(0,0.2)", class = "b",coef = "reward_oneback"))
 
@@ -69,12 +70,14 @@ fit_only_intercept = update(model,formula. = -reward_oneback)
 ```
 ### exmine  mcmc
 ```
+library(bayesplot)
 mcmc_trace(model)
 mcmc_pairs(model)
 ```
 
 ### examine posterior distrbution - statistics
 ```
+library(bayestestR)
 # posterior estimates
 describe_posterior(model)
 
@@ -163,6 +166,7 @@ model= brm(stay ~ reward_oneback*condition+(reward_oneback*condition| subject),
            family = bernoulli(link = "logit"))
 
 #create and plot an emmeans object
+library(emmeans)
 em=emmeans::emmeans(model,~reward_n1back*cue_n1back)
 plot(em)
 
