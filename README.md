@@ -56,11 +56,7 @@ When more than two options are possible for the y variable, we use the family = 
 
 The model in equations may look like that:
 
-Stay_key ~ Bernoulli (n=1, p = pi)
-Logit(pi) = 0 + Intercept_stay_key + (Beta1+Beta2*wm_capacityi) reward_onebacki
-Interceptstay_key ~ Normal (0,0.2) 
-Beta1 ~ Normal (0,0.2)
-Beta2 ~ Normal (0,0.2)
+![image](https://user-images.githubusercontent.com/51457131/160368365-e6993419-7602-4724-9a47-89466ca2bade.png)
 
 ```
 library(brms)
