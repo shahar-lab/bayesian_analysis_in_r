@@ -52,7 +52,16 @@ Bare in mind that you won't have access to marginal likelihoods if you want to c
 ### logistic regression
 When having two options for the outcome variables we use family = bernoulli(link = "logit").
 
-When more than two options are possible, we use the family = binomial(link = "logit").
+When more than two options are possible for the y variable, we use the family = binomial(link = "logit").
+
+The model in equations may look like that:
+
+Stay_key ~ Bernoulli (n=1, p = pi)
+Logit(pi) = 0 + Intercept_stay_key + (Beta1+Beta2*wm_capacityi) reward_onebacki
+Interceptstay_key ~ Normal (0,0.2) 
+Beta1 ~ Normal (0,0.2)
+Beta2 ~ Normal (0,0.2)
+
 ```
 library(brms)
 mypriors=c(set_prior(prior = "normal(0,0.2)", class = "b",coef = "Intercept"),
