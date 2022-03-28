@@ -125,7 +125,7 @@ ppc_stat_grouped(y, yrep, group_vec$reward_oneback)
 ### model comparision
 you might want to comapre which model fits better to your data. 
 e.g., you might have several brms models, and would like to find which set of predictors is most sutiable. 
-
+check this video to understand what loo does: https://youtu.be/Re-2yVd0Mqk?t=315
 using loo:
 ```
 library(loo)
