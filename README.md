@@ -56,7 +56,7 @@ When more than two options are possible for the y variable, we use the family = 
 
 The model in equations may look like that:
 
-![image](https://user-images.githubusercontent.com/51457131/160368365-e6993419-7602-4724-9a47-89466ca2bade.png)
+![image](https://user-images.githubusercontent.com/51457131/160368497-95b8db60-a7fe-4741-8e8f-268b93a9b905.png)
 
 ```
 library(brms)
