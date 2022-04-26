@@ -58,6 +58,8 @@ The model in equations may look like that:
 
 ![image](https://user-images.githubusercontent.com/51457131/160368497-95b8db60-a7fe-4741-8e8f-268b93a9b905.png)
 
+Always define weakly informative priors! a uniform prior on the log-odds scale will be a bi-modal distribution focused on 0 and 1 on the probability scale.
+
 ```
 library(brms)
 mypriors=c(set_prior(prior = "normal(0,0.2)", class = "b",coef = "Intercept"),
