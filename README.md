@@ -6,7 +6,7 @@ Find here guidelines for how to describe your analysis in a paper:
 <a href="https://www.nature.com/articles/s41562-021-01177-7/tables/1">Bayesian Analysis Reporting Guidelines</a>
 
 
-Find here guidlines for how to describe your effect:
+Find here guidelines for how to describe your effect:
 
 <a href="https://www.frontiersin.org/articles/10.3389/fpsyg.2019.02767/full">Indices of Effect Existence and Significance in the Bayesian Framework</a>
 
