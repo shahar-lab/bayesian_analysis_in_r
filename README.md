@@ -1,5 +1,6 @@
 # bayesian_analysis_in_r
 This includes some typical R code that we use in the lab.
+
 Find here guidelines for how to describe your analysis in a paper:
 
 <a href="https://www.nature.com/articles/s41562-021-01177-7/tables/1">Bayesian Analysis Reporting Guidelines</a>
