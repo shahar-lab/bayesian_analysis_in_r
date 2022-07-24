@@ -373,3 +373,46 @@ save(power_df_all,file="power_df_all.Rdata")
 power = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(criterion))
 CI_width_by_sample_size = power_df_all%>%group_by(sample_size)%>%summarise(power=mean(CI_width))
 ```
+
+### reliability
+Check <a href="https://discourse.mc-stan.org/t/computing-icc-like-reliability-within-unit-variance-for-hierarchical-models/20729">this</a> thread for an explanation
+
+There are two versions for the same analysis, one where we manually divide the data and one where we add session as a factor so that brms automatically divides it.
+
+Notice also that when we create the random factors in two separate parantheses we assume that there is no correlation between the two.
+
+Example:
+
+```
+library(dplyr)
+library(brms) 
+rm(list=ls())
+
+#get data
+df=read.csv('./data/empirical_data/df.csv')
+#add variables
+
+df=df%>%mutate(coherence=if_else(coherence==1,1,-1),reveal=if_else(reveal==1,1,-1),session=as.factor(session),
+               intercept1=if_else(session=="session1",1,0),intercept2=if_else(session=="session2",1,0),
+               reveal1=if_else(session=="session1",reveal,0),reveal2=if_else(session=="session2",reveal,0))
+
+# df=df%>%mutate(coherence=if_else(coherence==1,1,-1),reveal=if_else(reveal==1,0.5,-0.5),session=as.factor(session))
+
+#formulas
+formula_reliability =  coherence ~ 0+intercept1+intercept2+reveal1+reveal2+(0+intercept1+intercept2+reveal1+reveal2|subject)
+
+#model
+model_reliability =
+  brm(
+    formula = formula_reliability,
+    data = df,
+    family = bernoulli(link = "logit"),
+    warmup = 1000,
+    iter = 1200,
+    chains = 20,
+    cores = 20,
+    seed = 123,
+    backend ="cmdstanr"
+  )
+save(model_reliability, file = 'data/brms/model_reliability.Rdata')
+```
