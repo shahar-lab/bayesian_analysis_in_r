@@ -14,7 +14,7 @@ tau = exp(beta)
 
 קובץ לשחזור פרמטרים באקסגאוסיין
 
-'''
+```
 library(gamlss)
 library(brms)
 library(bayestestR)
@@ -63,4 +63,4 @@ hist(posterior_samples$tau_1)
 hist(posterior_samples$mu_2)
 hist(posterior_samples$tau_2)
 
-'''
+```
