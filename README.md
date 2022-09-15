@@ -99,7 +99,8 @@ pairs(model)
 library(bayestestR)
 # posterior estimates
 describe_posterior(model)
-
+#define a range for the rope (region of practical equivalence) and the function will return the % of the posterior inside that region.
+describe_posterior(model,rope_range=c(-0.1,0.1)) 
 #bayesfactor vs null point
 mybayes=bayesfactor_parameters(model)
 mybayes
