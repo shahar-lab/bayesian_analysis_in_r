@@ -100,6 +100,7 @@ library(bayestestR)
 # posterior estimates
 describe_posterior(model)
 #define a range for the rope (region of practical equivalence) and the function will return the % of the posterior inside that region.
+#read this article to learn more about the ROPE and the use of bayesian regressions - Indices of Effect Existence and Significance in the Bayesian Framework (Makowski et al., 2019)
 describe_posterior(model,rope_range=c(-0.1,0.1)) 
 #bayesfactor vs null point
 mybayes=bayesfactor_parameters(model)
