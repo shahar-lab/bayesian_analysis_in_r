@@ -1,4 +1,5 @@
-## Example 1: Parameter recovery to a single set of exGaussian data. Note that for clarity this is generated without noise.
+## Example 1: 
+Parameter recovery to a single set of exGaussian data. Note that for clarity this is generated without noise.
 ```
 library(brms)
 library(bayestestR)
