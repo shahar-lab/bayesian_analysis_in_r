@@ -23,4 +23,5 @@ model=brm(y~x1+x2+x3,
           backend='cmdstan')
 
 bayestestR::describe_posterior(model)
+
 ```
