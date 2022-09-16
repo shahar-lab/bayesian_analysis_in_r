@@ -152,6 +152,7 @@ print(paste('tau    (x1 is 0) =', median(samples$tau_b0),
 
 ```
 
+
 #simulate data from true mu {b0=400,b1=100,b2=-40,b3=75},sigma=50,tau={b0=150,b1=50,b2=-100,b3=125}
 N   =10000
 x1  =rbinom(N,size=1,prob=.5)
@@ -189,18 +190,19 @@ model<-brm(
           prior(student_t(3, 0.05,0.05),class=Intercept, dpar="sigma"),
 
           #mean
-          prior(normal(0,0.1),class=b, coef="x1",dpar=""),
-          prior(normal(0,0.1),class=b, coef="x2",dpar=""),
-          prior(normal(0,0.1),class=b, coef="x1:x2",dpar=""),
+          prior(normal(0,1),class=b, coef="x1",dpar=""),
+          prior(normal(0,1),class=b, coef="x2",dpar=""),
+          prior(normal(0,1),class=b, coef="x1:x2",dpar=""),
 
           #tau
-          prior(normal(0,0.1),class=b, coef="x1",dpar="beta"),
-          prior(normal(0,0.1),class=b, coef="x2",dpar="beta"),
-          prior(normal(0,0.1),class=b, coef="x1:x2",dpar="beta")
+          prior(normal(0,1),class=b, coef="x1",dpar="beta"),
+          prior(normal(0,1),class=b, coef="x2",dpar="beta"),
+          prior(normal(0,1),class=b, coef="x1:x2",dpar="beta")
           )
 )
 
 describe_posterior(model)
+
 ```
 
 
