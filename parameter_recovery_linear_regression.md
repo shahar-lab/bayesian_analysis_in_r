@@ -60,3 +60,30 @@ model=brm(y~x1*x2,
 
 bayestestR::describe_posterior(model)
 ```
+## Example 3:
+Now lets do the same thing only with two categorial variabels and their interactions
+```
+####two categorical var and their interaction
+N=10000 
+
+x1   =rbinom(N,size=1, prob=0.5)
+x2   =rbinom(N,size=1, prob=0.5)
+x3   =x1*x2
+error=rnorm(100,0,16)
+
+#Generate the dependent variable (b0=150, b1=-4, b2=2.5, b3=5)
+y    =150-(4*x1)+(2.5*x2)+(5*x3)+error
+df   =data.frame(x1,x2,x3,y)
+
+#Frequentist model
+model=lm(y~x1*x2,data=df)
+summary(model)
+autoplot(model)
+
+#Bayesian model
+model=brm(y~x1*x2,
+          data=df,
+          backend='cmdstan')
+
+bayestestR::describe_posterior(model)
+```
