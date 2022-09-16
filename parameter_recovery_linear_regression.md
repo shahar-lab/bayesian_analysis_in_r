@@ -1,4 +1,4 @@
-##Example 1: 
+## Example 1: 
 We will simulate data with three indepndent varabels (two continuous  and one categorial). 
 Then we will generate a depndent using some fixed regression parameters.
 Finaly we will use both frequentist and bayesian modeling to recover thoese regression parameters from the data
@@ -30,7 +30,7 @@ model=brm(y~x1+x2+x3,
 bayestestR::describe_posterior(model)
 
 ```
-###Exmple 2
+## Example 2
 Same as before, only now we are goinf to use to con indepndent varabels and their interaction.
 So now the third regrssion coeff is the interaction parameter.
 
