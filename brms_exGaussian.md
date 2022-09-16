@@ -82,42 +82,7 @@ samples = samples%>%mutate(RTmean=b_Intercept,
 print(paste('RTmean_pred =', median(samples$RTmean))) #you can use hdi(samples$b_Intercept) to get CI
 print(paste('mu_pred ='    , median(samples$mu)))
 print(paste('tau_pred ='   , median(samples$tau)))
-```
-library(brms)
-library(bayestestR)
-library(dplyr)
-library(insight)
 
-#recover exGaussian parameters mu and tau for a single data set (no indepndent variables - only intercept)
-N   =5000
-rt  =rexGAUS(N, mu = 400, sigma = 50, nu = 150)
-df  =data.frame(rt)
-
-#fit with brms and obtain the posterior samples
-model<-brm( 
-  brmsformula(
-  rt    ~ 1,
-  sigma ~ 1,
-  beta  ~ 1
-), 
-data = df,warmup = 500,iter = 1000,  cores =1, chains=1,
-family = exgaussian(),
-backend='cmdstan')
-
-samples = insight::get_parameters(model)
-
-#examine your recovered paramters 
-describe_posterior(model)
-
-samples = samples%>%mutate(RTmean=b_Intercept,
-                           mu  =b_Intercept-exp(b_beta_Intercept),
-                           tau =exp(b_beta_Intercept))
-
-
-print(paste('RTmean_pred =', median(samples$RTmean))) #you can use hdi(samples$b_Intercept) to get CI
-print(paste('mu_pred ='    , median(samples$mu)))
-print(paste('tau_pred ='   , median(samples$tau)))
-```
 
 
 ## Exmaple 2: One indepndent variable
