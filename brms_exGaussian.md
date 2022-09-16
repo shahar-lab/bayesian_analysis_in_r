@@ -1,4 +1,4 @@
-## Example 1: 
+## Example 1: Intercept only mode
 Parameter recovery to a single set of exGaussian data. Note that for clarity this is generated without noise.
 ```
 library(brms)
@@ -38,7 +38,63 @@ print(paste('tau_pred ='   , median(samples$tau)))
 ```
 
 
+## Exmaple 2: One indepndent variable
+```
+#### single independent categorical variable -----
 
+#simulate data from true mu {b0=400,b1=100},sigma=50,tau={b0=150,b1=50}
+N   =5000
+x1  =rbinom(N,size=1,prob=.5) #or if you want this to be continuous use something likernorm(N,3,1)
+rt  =rexGAUS(N, mu = 400+100*x1, sigma = 50, nu = 150+50*x1)
+df  =data.frame(x1,rt)
+
+
+
+#fit with brms and obtain the posterior samples
+model<-brm( 
+  brmsformula(
+    rt    ~ 1+x1,
+    sigma ~ 1,
+    beta  ~ 1+x1
+  ), 
+  data = df,warmup = 500,iter = 1000,  cores =1, chains=1,
+  family = exgaussian(),
+  backend='cmdstan')
+
+samples = insight::get_parameters(model)
+
+
+
+#recover regression parameters
+
+samples = samples%>%mutate(#first calculate the intercept parameter b0 for RTmean, mu and tau
+                           RTmean_b0=b_Intercept,
+                           mu_b0    =b_Intercept-exp(b_beta_Intercept),
+                           tau_b0   =exp(b_beta_Intercept),
+                           
+                           #now calculate the slope parameter b1 for RTmean, mu and tau
+                           RTmean_b1=b_Intercept+b_x1 - RTmean_b0,
+                           mu_b1    =b_Intercept+b_x1-exp(b_beta_Intercept+b_beta_x1)-mu_b0,
+                           tau_b1   =exp(b_beta_Intercept+b_beta_x1)-tau_b0
+                           )
+
+
+print(paste('mu_b0 (intercept)=',median(samples$mu_b0))) #you can use hdi(samples$...) to get CI
+print(paste('mu_b1 (slope)='    ,median(samples$mu_b1)))
+
+print(paste('tau_b0 (intercept)=',median(samples$tau_b0)))
+print(paste('tau_b1 (slope)='    ,median(samples$tau_b1)))
+
+
+
+#examine center estimates for mu, and tau (e.g., in case you want to plot this) 
+print(paste('RTmean (x1 is 0) =', median(samples$RTmean_b0),
+            'RTmean (x1 is 1) =', median(samples$RTmean_b1+samples$RTmean_b0))) 
+print(paste('mu     (x1 is 0) =', median(samples$mu_b0),
+            'mu     (x1 is 1) =', median(samples$mu_b1+samples$mu_b0))) 
+print(paste('tau    (x1 is 0) =', median(samples$tau_b0),
+            'tau    (x1 is 1) =', median(samples$tau_b1+samples$tau_b0))) 
+```
 
 
 OLD:
