@@ -88,7 +88,8 @@ print(paste('tau_pred ='   , median(samples$tau)))
 ```
 
 
-## Exmaple 2: One indepndent variable using log link (you can also use 'identity' link, and then you dont need to convert the coeff)
+## Example 2: One indepndent variable using log link <br>
+(note you can also use 'identity' link, and then you dont need to convert the coeff)
 
 ```
 #### single independent categorical variable -----
@@ -147,8 +148,60 @@ print(paste('tau    (x1 is 0) =', median(samples$tau_b0),
             'tau    (x1 is 1) =', median(samples$tau_b1+samples$tau_b0))) 
 ```
 
-## Example 3: two indepndent and interaction term
+## Example 3: two indepndent and interaction term using identity link
 
+```
+
+#simulate data from true mu {b0=400,b1=100,b2=-40,b3=75},sigma=50,tau={b0=150,b1=50,b2=-100,b3=125}
+N   =10000
+x1  =rbinom(N,size=1,prob=.5)
+x2  =rbinom(N,size=1,prob=.5)
+x3  =x1*x2
+rt  =rexGAUS(N, mu    = 400+100*x1+ 40*x2+ 75*x1*x2, 
+                sigma = 50, 
+                nu    = 150+ 50*x1+100*x2+125*x1*x2)
+
+df  =data.frame(x1,x2,rt=rt/1000)
+
+#fit with ML
+model<-gamlss(rt~x1*x2,
+              sigma.formula = ~1,
+              nu.formula    = ~x1*x2,
+              family=exGAUS(mu.link = "identity", sigma.link = "identity", nu.link = "identity"))
+model
+summary(model)
+
+
+
+#fit with brms and obtain the posterior samples
+model<-brm( 
+  brmsformula(
+    rt    ~ 1+x1*x2,
+    sigma ~ 1,
+    beta  ~ 1+x1*x2
+  ), 
+  data = df,warmup = 1000,iter = 1100,  cores =2, chains=2, #you can relax these setting to get a quicker and less accurate fit. Since we have many parameters here - sampling is harder for our beloved Stan
+  family = exgaussian(link = "identity", link_sigma = "identity", link_beta = "identity"),
+  backend='cmdstan',
+  prior=c(#intercept
+          prior(student_t(3, 0.5, 1.25),class=Intercept, dpar=""),#you can plot this using plot(dstudent_t(seq(0,1000,1),df=3,mu=523.1,sigma=125.1))
+          prior(student_t(3, 0.1, 0.50),class=Intercept, dpar="beta"),
+          prior(student_t(3, 0.05,0.05),class=Intercept, dpar="sigma"),
+
+          #mean
+          prior(normal(0,0.1),class=b, coef="x1",dpar=""),
+          prior(normal(0,0.1),class=b, coef="x2",dpar=""),
+          prior(normal(0,0.1),class=b, coef="x1:x2",dpar=""),
+
+          #tau
+          prior(normal(0,0.1),class=b, coef="x1",dpar="beta"),
+          prior(normal(0,0.1),class=b, coef="x2",dpar="beta"),
+          prior(normal(0,0.1),class=b, coef="x1:x2",dpar="beta")
+          )
+)
+
+describe_posterior(model)
+```
 
 
 
