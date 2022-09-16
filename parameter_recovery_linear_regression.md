@@ -1,12 +1,12 @@
 ##Example 1: 
-We will simulate data with three indepndent varabels (two con and one categorial). 
+We will simulate data with three indepndent varabels (two continuous  and one categorial). 
 Then we will generate a depndent using some fixed regression parameters.
 Finaly we will use both frequentist and bayesian modeling to recover thoese regression parameters from the data
 
 ```
 #Aim:Generate and recover linear regression parameters using freq and bayes models
 
-####data with two cont and one categorical variables
+####data with two continuous  and one categorical variables
 N=100 
 x1   =rnorm(N,mean=50, sd=9)
 x2   =rnorm(N,mean=200,sd=64)
@@ -37,7 +37,7 @@ So now the third regrssion coeff is the interaction parameter.
 ```
 #Aim:Generate and recover linear regression parameters using freq and bayes models
 
-####data with two cont and interaction
+####data with two continuous and interaction
 N=100 
 x1   =rnorm(N,mean=50, sd=9)
 x2   =rnorm(N,mean=200,sd=64)
