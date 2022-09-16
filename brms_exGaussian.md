@@ -1,5 +1,6 @@
 ## Example 1: Intercept only model
 Parameter recovery to a single set of exGaussian data. 
+
 This includes three examples: 
 (1) estimate parameters using ML in gamlss
 (2) estimate posterior using brms 
