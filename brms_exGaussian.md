@@ -3,9 +3,11 @@ Parameter recovery to a single set of exGaussian data.
 
 This includes three examples: 
 
-(1) estimate parameters using ML in gamlss
-(2) estimate posterior using brms 
-(3) estimate posterior using brms with a 'log' link for tau and sigma (this can help mcmc sampling but requires using exp() to get the natural scale of milliseconds)
+(1) estimate parameters using ML in gamlss<br>
+(2) estimate posterior using brms with 'identity' link for tau and sigma<br>
+(3) estimate posterior using brms with a 'log' link for tau and sigma (this can help mcmc sampling but requires using exp() to get the natural scale of milliseconds)<br>
+
+Usually you want to use option2 since it will give you coeff in scale of milliseconds or seconds. But note this can increase sampling time or cause other diffcultis in the mcmc chains.
 
 ```
 ####simulate data from true mu=400,sigma=50,tau=150
@@ -83,9 +85,11 @@ print(paste('RTmean_pred =', median(samples$RTmean))) #you can use hdi(samples$b
 print(paste('mu_pred ='    , median(samples$mu)))
 print(paste('tau_pred ='   , median(samples$tau)))
 
+```
 
 
-## Exmaple 2: One indepndent variable
+## Exmaple 2: One indepndent variable using log link (you can also use 'identity' link, and then you dont need to convert the coeff)
+
 ```
 #### single independent categorical variable -----
 
@@ -143,8 +147,14 @@ print(paste('tau    (x1 is 0) =', median(samples$tau_b0),
             'tau    (x1 is 1) =', median(samples$tau_b1+samples$tau_b0))) 
 ```
 
+## Example 3: two indepndent and interaction term
 
-OLD:
+
+
+
+
+
+OLD note2self:
 פרשנות הפרמטרים
 
 
@@ -164,53 +174,3 @@ tau = exp(beta)
 
 קובץ לשחזור פרמטרים באקסגאוסיין
 
-```
-library(gamlss)
-library(brms)
-library(bayestestR)
-library(see)
-library(dplyr)
-theme_set(theme_modern())
-N=5000
-
-#simulate exGaussian data
-x1=rexGAUS(N/2, mu = 400, sigma = 50, nu = 150)
-x2=rexGAUS(N/2, mu = 500, sigma = 50, nu = 175)
-df=data.frame(
-condition=c(rep(0,N/2),rep(1,N/2)),
-rt       =c(x1,x2)
-)
-
-
-df%>%group_by(condition)%>%summarise(mean(rt))
-#fit with brms
-model<-brm( 
-  brmsformula(
-  rt    ~ 1+condition,
-  sigma ~ 1,
-  beta  ~ 1+condition
-), 
-data = df,
-warmup = 500,
-iter = 1000,    
-cores =1,
-chains=1,
-family = exgaussian(),
-backend='cmdstan')
-
-
-describe_posterior(model)
-posterior_samples = insight::get_parameters(model)
-names(posterior_samples)
-
-posterior_samples = posterior_samples%>%mutate(mu_1  =b_Intercept-exp(b_beta_Intercept),
-                                               tau_1 =exp(b_beta_Intercept),
-                                               mu_2  =b_Intercept+b_condition-exp(b_beta_Intercept+b_beta_condition),
-                                               tau_2 =exp(b_beta_Intercept+b_beta_condition)
-                                               )
-hist(posterior_samples$mu_1)
-hist(posterior_samples$tau_1)
-hist(posterior_samples$mu_2)
-hist(posterior_samples$tau_2)
-
-```
