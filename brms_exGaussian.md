@@ -1,7 +1,9 @@
-## Example 1: Intercept only mode
+## Example 1: Intercept only model
 Parameter recovery to a single set of exGaussian data. 
 This includes three examples: 
-One with ML using gamlss, one with brms, and one with brms where sigma and tau are coverted within stan using log lilk.
+(1) estimate parameters using ML in gamlss
+(2) estimate posterior using brms 
+(3) estimate posterior using brms with a 'log' link for tau and sigma (this can help mcmc sampling but requires using exp() to get the natural scale of milliseconds)
 
 ```
 ####simulate data from true mu=400,sigma=50,tau=150
