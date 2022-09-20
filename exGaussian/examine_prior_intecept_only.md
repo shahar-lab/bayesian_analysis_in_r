@@ -1,7 +1,7 @@
 ## examine priors (intercept only)
 
 ### initilize and compile
-we can start by initilazing some brms model. this is just to compile a model we can later change. not data is only a placeholder required by brms. we will only sample from the priors here.
+we can start by initilazing some brms model. this is just to compile a model we can later change. note data is only a placeholder required by brms. we will only sample from the priors here.
 
 ```
 library(brms)
