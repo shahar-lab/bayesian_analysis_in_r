@@ -86,7 +86,7 @@ model=update(model,prior=myprior,newdata=df,iter=100000)
 
 
 ```
-now we can check we got estimates around what we asked for (meanrt ~0.5sec, sigma~0.05sec, tau~0.15sec). Remember bo_tau=exp(b0_tau) and same for sigma.
+now we can check we got estimates around what we asked for (meanrt about 0.5sec, sigma about 0.05sec, tau about 0.15sec). Remember bo_tau=exp(b0_tau) and same for sigma.
 
 ```
 describe_posterior(model,ci=.80) #(try to back-transform your coeff to see they make sense in ms. you can also do that for the 95%CI)
