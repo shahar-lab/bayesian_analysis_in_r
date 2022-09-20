@@ -97,10 +97,11 @@ we can plot some simulated RTs. each line in the next plot will be an exgaussian
 so its ok if this 'dance' a bit, but should be centered overall around the ms position we want
 ```
 #check prior predictive checks
+library(ggplot2)
 brms::pp_check(model,
                ndraws=20, #define how many samples to use. note that each sample generates a distrbution,
                prefix='ppd' #so brms wont plot the empirical data
-               )
+               )+coord_cartesian(xlim = c(-5, 5))
 ```
 
 # sandbox
