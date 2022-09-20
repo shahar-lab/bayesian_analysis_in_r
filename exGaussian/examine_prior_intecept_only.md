@@ -98,6 +98,8 @@ brms::pp_check(model,
 
 # sandbox
 you can try different priors without having to compile your model (just quicker)
+
+```
 ###sandbox------
 #now lets set some priors and examine our simulated rts
 myprior  = c(
