@@ -59,6 +59,7 @@ myformula=brmsformula(
 #brms family argument
 myfamily=exgaussian(link = "identity", link_sigma = "log", link_beta = "log")
 
+#brms prior argument
 myprior  = c(
   #intercept
   set_prior(prior="normal(0.5,       0.1)",       class="b", coef="Intercept", dpar=""),
