@@ -43,11 +43,12 @@ exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000
 ## sampling data in brms using the defined priors
 
 ```
+#### sample rts using brms and only priors
 library(brms)
 library(bayestestR)
-
+rm(list=ls())
 #brms data argument (note this is a place holder since we will sample from the prior)
-df=data.frame(rt=1)
+df=data.frame(rt=rep(1,10000))
 
 #brms regressions argument
 myformula=brmsformula(
@@ -67,18 +68,23 @@ myprior  = c(
   set_prior(prior="normal(-1.89712,  1)",  class="b", coef="Intercept", dpar="beta")
 )
 
-#sample
+#compile
 model<-
   brm(myformula,
-      myprior,
+      prior=myprior,
       family      = myfamily,
       data        = df, 
       sample_prior='only',
-      iter        = 10000, #should go quick since we have no posterior  
+      iter        = 1,  
       warmup      = 1,
       cores       = 1, 
       chains      = 1, 
       backend='cmdstan')
+
+#sample
+model=update(model,prior=myprior,newdata=df,iter=100000)
+
+
 ```
 now we can check we got estimates around what we asked for (meanrt ~0.5sec, sigma~0.05sec, tau~0.15sec). Remember bo_tau=exp(b0_tau) and same for sigma.
 
