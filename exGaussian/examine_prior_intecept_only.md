@@ -1,7 +1,7 @@
 # examine priors (intercept only)
 This code will walk you through prior testing for exGaussian sampling. The idea here is to find good priors to use when sampling exgaussian posteriors with rt data.
 
-## manullay examine some priors
+## manually examine some priors
 Lets start by visually and manullay examining some possible distrbutions for our priors.
 This is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale.
 What we want to get here, is exgaussian distrbutions that will get us resnoable estimates for rts.
