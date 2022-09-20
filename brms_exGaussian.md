@@ -182,7 +182,7 @@ model<-brm(
     beta  ~ 1+x1*x2
   ), 
   data = df,warmup = 1000,iter = 1100,  cores =2, chains=2, #you can relax these setting to get a quicker and less accurate fit. Since we have many parameters here - sampling is harder for our beloved Stan
-  family = exgaussian(link = "identity", link_sigma = "identity", link_beta = "identity"),
+  family = exgaussian(link = "identity", link_sigma = "log", link_beta = "log"),
   backend='cmdstan',
   prior=c(#intercept
           prior(student_t(3, 0.5, 1.25),class=Intercept, dpar=""),#you can plot this using plot(dstudent_t(seq(0,1000,1),df=3,mu=523.1,sigma=125.1))
@@ -203,6 +203,64 @@ model<-brm(
 
 describe_posterior(model)
 
+
+#recover regression parameters
+samples = samples%>%mutate(
+  
+  #calculate the intercept parameter b0 for RTmean, mu and tau
+  RTmean_b0=b_Intercept,
+  mu_b0    =b_Intercept-exp(b_beta_Intercept),
+  tau_b0   =exp(b_beta_Intercept),
+  
+  
+  #calculate the slope parameter b1 
+  RTmean_b1=(b_Intercept+b_x1) - 
+            (b_Intercept),
+  
+  mu_b1    =(b_Intercept+b_x1-exp(b_beta_Intercept+b_beta_x1))-
+            (b_Intercept-exp(b_beta_Intercept)),
+  
+  tau_b1   =(exp(b_beta_Intercept+b_beta_x1))-
+            (exp(b_beta_Intercept)),
+  
+  
+  #calculate the slope parameter b2 
+  RTmean_b2=(b_Intercept+b_x2) - 
+            (b_Intercept),
+  
+  mu_b2    =(b_Intercept+b_x2-exp(b_beta_Intercept+b_beta_x2))-
+            (b_Intercept-exp(b_beta_Intercept)),
+  
+  tau_b2   =(exp(b_beta_Intercept+b_beta_x2))-
+            (exp(b_beta_Intercept)),
+  
+  
+  #calculate the slope parameter b3 for the interaction of x1:x2
+  RTmean_b3=(b_Intercept+b_x1+b_x2+`b_x1:x2`) - 
+            (b_Intercept+b_x1+b_x2),
+  
+  mu_b3    =(b_Intercept+b_x1+b_x2+`b_x1:x2`-exp(b_beta_Intercept+b_beta_x1+b_beta_x2+`b_beta_x1:x2`))- 
+            (b_Intercept+b_x1+b_x2-exp(b_beta_Intercept+b_beta_x1+b_beta_x2)),
+  
+  tau_b3   =exp(b_beta_Intercept+b_beta_x1+b_beta_x2+`b_beta_x1:x2`)-
+            exp(b_beta_Intercept+b_beta_x1+b_beta_x2)
+)
+
+print(paste('RTmean_b0 (intercept)=',median(samples$RTmean_b0)*1000)) #you can use hdi(samples$...) to get CI
+print(paste('RTmean_b1 (slope)='    ,median(samples$RTmean_b1)*1000))
+print(paste('RTmean_b2 (slope)='    ,median(samples$RTmean_b2)*1000))
+print(paste('RTmean_b3 (slope)='    ,median(samples$RTmean_b3)*1000))
+
+print(paste('mu_b0 (intercept)=',median(samples$mu_b0)*1000)) #you can use hdi(samples$...) to get CI
+print(paste('mu_b1 (slope)='    ,median(samples$mu_b1)*1000))
+print(paste('mu_b2 (slope)='    ,median(samples$mu_b2)*1000))
+print(paste('mu_b3 (slope)='    ,median(samples$mu_b3)*1000))
+
+
+print(paste('tau_b0 (intercept)=',median(samples$tau_b0)*1000))
+print(paste('tau_b1 (slope)='    ,median(samples$tau_b1)*1000))
+print(paste('tau_b2 (slope)='    ,median(samples$tau_b2)*1000))
+print(paste('tau_b3 (slope)='    ,median(samples$tau_b3)*1000))
 ```
 
 
