@@ -10,9 +10,8 @@ rm(list=ls())
 
 
 ####initial preperation and model compiliation
-#load data but note this is technical - we are not going to actually use the data here since brms will work under "prior=only"
-load('./df.rdata')
-df=df_n
+#make a data df but note this is technical - we are not going to actually use the data here since brms will work under "prior=only"
+df=data.frame(rt=1)
 
 #brms regressions argument
 myformula=brmsformula(
