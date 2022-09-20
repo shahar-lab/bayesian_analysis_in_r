@@ -6,7 +6,7 @@ This is important since we are dealing with a 'log' link meaning we need to set 
 What we want to get here for our exgaussian distrbution as a prior that will get us resnoable estimates for rts.
 It would be nice to see the meanrt set aroun 500ms, sigma around 50ms, and tau around 150
 
-### examining our priors for sigma:
+#### examining our priors for sigma:
 we will set a tau mean and sd (putting care into the log transformation)
 and then visually examine the prior and use common sense. 
 usually sigma estimates should get around 50ms values as a prior for an intercept
