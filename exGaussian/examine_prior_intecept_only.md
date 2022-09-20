@@ -15,23 +15,29 @@ the last line of the next code here will get you the 20th,40th,60th, and 80th pe
 which should be very informative for us
 
 ```
-priormean = log(50/1000) #this will be our prior mean for 50ms
-priorsd   = 1.5 #this will be our tau prior sd - change it to see if you get what you need
+priormean = log(50/1000) 
+priorsd   = 1.5 
 
-x=seq(-4,4,0.001) #just to generate a prior plot in the next line
-curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in log estimates
+#plot in log scale
+x=seq(-4,4,0.001) 
+curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) 
+
+#get some quantiles in ms scale
 exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
 ```
 
 #### examining our priors for tau (the same way as sigma)
 usually tau estimates should get around 150ms values as a prior for an intercept
 ```
-priormean = log(150/1000) #this will be our tau prior mean for 50ms
-priorsd   = 1 #this will be our tau prior sd - change it to see if you get what you need
+priormean = log(150/1000) 
+priorsd   = 1 
 
-x=seq(-4,4,0.001) #just to generate a prior plot in the next line
-curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in log estimates
-exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the tau in ms at the 20,40,60 and quantile of the prior.
+#plot in log scale
+x=seq(-4,4,0.001) 
+curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) 
+
+#get some quantiles in ms scale
+exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
 ```
 
 ## sampling data in brms usingthe defined priors
