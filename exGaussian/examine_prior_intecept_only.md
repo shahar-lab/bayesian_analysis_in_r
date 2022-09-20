@@ -5,7 +5,7 @@ This code will walk you through prior testing for exGaussian sampling. The idea 
 Lets start by visually and manullay examining some possible distrbutions for our priors.
 This is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale.
 What we want to get here, is exgaussian distrbutions that will get us resnoable estimates for rts.
-It would be nice to see the meanrt set aroun 500ms, sigma around 50ms, and tau around 150ms.
+It would be nice to see the meanrt set aroun 500ms, sigma around 50ms, and tau around 300ms.
 
 #### examining our priors for sigma:
 We will set a  mean and sd (putting care into the log transformation)
@@ -16,7 +16,7 @@ which should be very informative for us
 
 ```
 priormean = log(50/1000) 
-priorsd   = 1.5 
+priorsd   = 0.5
 
 #plot in log scale
 x=seq(-4,4,0.001) 
@@ -27,10 +27,10 @@ exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000
 ```
 
 #### examining our priors for tau (the same way as sigma)
-usually tau estimates should get around 150ms values as a prior for an intercept
+usually tau estimates should get around 300ms values as a prior for an intercept
 ```
-priormean = log(150/1000) 
-priorsd   = 1 
+priormean = log(300/1000) 
+priorsd   = 0.5
 
 #plot in log scale
 x=seq(-4,4,0.001) 
@@ -64,8 +64,8 @@ myfamily=exgaussian(link = "identity", link_sigma = "log", link_beta = "log")
 myprior  = c(
   #intercept
   set_prior(prior="normal(0.5,       0.1)",       class="b", coef="Intercept", dpar=""),
-  set_prior(prior="normal(-2.995732, 1.5)",  class="b", coef="Intercept", dpar="sigma"),
-  set_prior(prior="normal(-1.89712,  1)",  class="b", coef="Intercept", dpar="beta")
+  set_prior(prior="normal(-2.995732, 0.5)",  class="b", coef="Intercept", dpar="sigma"),
+  set_prior(prior="normal(-1.203973,  0.5)",  class="b", coef="Intercept", dpar="beta")
 )
 
 #compile
@@ -102,26 +102,14 @@ brms::pp_check(model,
                ndraws=20, #define how many samples to use. note that each sample generates a distrbution,
                prefix='ppd' #so brms wont plot the empirical data
                )+coord_cartesian(xlim = c(-5, 5))
-```
 
-# sandbox
-you can try different priors without having to compile your model (just quicker)
 
-```
-###sandbox------
-#now lets set some priors and examine our simulated rts
-myprior  = c(
-  #intercept
-  set_prior(prior="normal(0.5,       0.1)",       class="b", coef="Intercept", dpar=""),
-  set_prior(prior="normal(-2.995732, 1.5)",  class="b", coef="Intercept", dpar="sigma"),
-  set_prior(prior="normal(-1.89712,  1)",  class="b", coef="Intercept", dpar="beta")
-)
+# another why to check the simulated data
+preds <- posterior_predict(model, newdata = data.frame(rt=1))
 
-model=update(model,prior=myprior,newdata=df,iter=100000)
-describe_posterior(model,ci=.80)
-brms::pp_check(model,
-               ndraws=20, #define how many samples to use. note that each sample generates a distrbution,
-               prefix='ppd' #so brms wont plot the empirical data
-               )
+library(ggdist)
+ggplot() + 
+  stat_slab(aes(x = preds[,1], y = "")) +
+  xlim(-1,2)
 
 ```
