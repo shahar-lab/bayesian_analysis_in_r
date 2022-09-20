@@ -41,28 +41,25 @@ stancode(model)
 
 now we can visullay examine some prior. this is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale
 
-```
-# now we can change the prior and see what happens
-# here we will set meanrt prior around 500ms, sigma around 50ms, tau around 150ms
-# first lets just visuallt and manully examine the priors for sigma and tau
-# dealing with the fact that we need to set the priors after the log transformation
-
 # examining our priors for sigma:
-# we will set a tau mean and sd (putting care into the log transformation)
-# and then visually examine the prior and use common sense. 
-# usually sigma estimates should get around 50ms values as a prior for an intercept
+we will set a tau mean and sd (putting care into the log transformation)
+and then visually examine the prior and use common sense. 
+usually sigma estimates should get around 50ms values as a prior for an intercept
+the last line of the next code will get you the 20th,40th,60th, and 8th percntile of the prior distrbution in ms
+which should be very informative for us
 
-priormean = log(50/1000) #this will be our tau prior mean for 50ms
+```
+priormean = log(50/1000) #this will be our prior mean for 50ms
 priorsd   = 1.5 #this will be our tau prior sd - change it to see if you get what you need
 
 x=seq(-4,4,0.001) #just to generate a prior plot in the next line
 curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in log estimates
-exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the tau in ms at the 20,40,60 and quantile of the prior.
+exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
+```
 
-
-#examining our priors for tau (tahe same way as sigma)
-# usually tau estimates should get around 150ms values as a prior for an intercept
-
+# examining our priors for tau (the same way as sigma)
+usually tau estimates should get around 150ms values as a prior for an intercept
+```
 priormean = log(150/1000) #this will be our tau prior mean for 50ms
 priorsd   = 1 #this will be our tau prior sd - change it to see if you get what you need
 
@@ -72,6 +69,7 @@ exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what wil
 ```
 
 now we can test these priors by actually sampling rt in brms from these priors
+here we will set meanrt prior around 500ms, sigma around 50ms, tau around 150ms.
 
 ```
 ###sandbox------
@@ -87,7 +85,10 @@ model=update(model,prior=myprior,newdata=df,iter=100000)
 
 #check you got estimates around what we asked for (meanrt ~0.5sec, sigma~0.05sec, tau~0.15sec). Remember bo_tau=exp(b0_tau) and same for sigma.
 describe_posterior(model,ci=.80) #(try to back-transform your coeff to see they make sense in ms. you can also do that for the 95%CI)
-
+```
+now we can plot some simulated RTs. each line in the next plot will be an exgaussian dist from a single prior draw.
+so its ok if this 'dance' a bit, but should be centered overall around the ms position we want
+```
 #check prior predictive checks
 brms::pp_check(model,
                ndraws=20, #define how many samples to use. note that each sample generates a distrbution,
