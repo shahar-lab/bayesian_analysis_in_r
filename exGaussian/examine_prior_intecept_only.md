@@ -40,7 +40,7 @@ curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10)
 exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 
 ```
 
-## sampling data in brms usingthe defined priors
+## sampling data in brms using the defined priors
 
 ```
 library(brms)
