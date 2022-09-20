@@ -3,8 +3,8 @@ This code will walk you through prior testing for exGaussian sampling. The idea 
 
 ## manullay examine some priors
 Lets start by visually and manullay examining some possible distrbutions for our priors.
-This is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale
-What we want to get here for our exgaussian distrbution as a prior that will get us resnoable estimates for rts.
+This is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale.
+What we want to get here, is exgaussian distrbutions that will get us resnoable estimates for rts.
 It would be nice to see the meanrt set aroun 500ms, sigma around 50ms, and tau around 150
 
 #### examining our priors for sigma:
