@@ -1,20 +1,21 @@
 # This is the model block stan uses when using an exGaussian family with a 'log' ling for both beta and sigma
 
-So we can see that a few important thing are happening here:
-(1) mu is the RT mean (not the exguassian 'mu' which is [mu - beta] here)
-(2) sigma has an exp() transformation. So if stan sampled sigma = 0 for one itreation, exp_mod_normal_lpdf will get exp(0). <br>
+So we can see that a few important thing are happening here:<br/>
+(1) mu is the RT mean (not the exguassian 'mu' which is [mu - beta] here)<br/>
+(2) sigma has an exp() transformation. So if stan sampled sigma = 0 for one itreation, exp_mod_normal_lpdf will get exp(0). <br/>
 Also important here is that for some reason the sigma transfomation applys only when sampling with data, but not when sampling only priors, when prior='only'
-(3) Beta is the tau parameter in the exgaussian.Like sigma, it has an exp() transformation. This is true fro both when sampling with empirical data and when using prior='only'.
-(4) The likelihood function actually gets lambda which is inv(beta) but this doesn't affect us since we are usually intrested in beta (tau), not lambda
-
-When interpeting the coeff:
-for the mean, just use the regular coeff you get. b0_meanrt=b0
-
-for tau, you need to use exp(). Note this has to be on the whole estimate. E.g., if we have beta=b0+b1*x1 
-you can have b0_tau=exp(bo_tau), and the b1_tau=exp(b0_tau+b1_tau*1)-exp(b0_tau). (exp(b1_tau) won't work here - important!).
-
-for mu (the exgaussian mu) you need to substract tau from the mean.
-so b0_mu=bo_meanrt-exp(b0_tau) or b1_mu=b1_meanrt-[exp(b0_tau+b1_tau*1)-exp(b0_tau)]
+(3) Beta is the tau parameter in the exgaussian.Like sigma, it has an exp() transformation. This is true fro both when sampling with empirical data and when using prior='only'.<br/>
+(4) The likelihood function actually gets lambda which is inv(beta) but this doesn't affect us since we are usually intrested in beta (tau), not lambda<br/>
+<br/>
+When interpeting the coeff:<br/>
+for the mean, just use the regular coeff you get. b0_meanrt=b0<br/>
+<br/>
+for tau, you need to use exp(). Note this has to be on the whole estimate. E.g., if we have beta=b0+b1*x1 <br/>
+you can have b0_tau=exp(bo_tau), and the b1_tau=exp(b0_tau+b1_tau*1)-exp(b0_tau). (exp(b1_tau) won't work here - important!).<br/>
+<br/>
+for mu (the exgaussian mu) you need to substract tau from the mean.<br/>
+so b0_mu=bo_meanrt-exp(b0_tau) or b1_mu=b1_meanrt-[exp(b0_tau+b1_tau*1)-exp(b0_tau)]<br/>
+<br/>
 
 ```
 model {
