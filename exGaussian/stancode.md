@@ -17,6 +17,17 @@ so b0_mu=bo_meanrt-exp(b0_tau) or b1_mu=b1_meanrt-[exp(b0_tau+b1_tau*1)-exp(b0_t
 <br/>
 
 ```
+parameters {
+  vector[K] b; // population-level effects
+  vector[K_sigma] b_sigma; // population-level effects
+  vector[K_beta] b_beta; // population-level effects
+}
+transformed parameters {
+  real lprior = 0; // prior contributions to the log posterior
+  lprior += student_t_lpdf(b[1] | 3, 0.5, 0.1);
+  lprior += student_t_lpdf(b_sigma[1] | 3, 1.051271, 1.01005);
+  lprior += student_t_lpdf(b_beta[1] | 3, 1.161834, 1.077884);
+}
 model {
   // likelihood including constants
   if (!prior_only) {
