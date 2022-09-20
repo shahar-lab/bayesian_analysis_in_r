@@ -1,4 +1,5 @@
 # examine priors (intercept only)
+This code will walk you through prior testing for exGaussian sampling. The idea here is to find good priors to use when sampling exgaussian posteriors with rt data.
 
 ## manullay examine some priors
 Lets start by visually and manullay examining some possible distrbutions for our priors.
@@ -22,7 +23,7 @@ curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in
 exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
 ```
 
-### examining our priors for tau (the same way as sigma)
+#### examining our priors for tau (the same way as sigma)
 usually tau estimates should get around 150ms values as a prior for an intercept
 ```
 priormean = log(150/1000) #this will be our tau prior mean for 50ms
@@ -33,7 +34,7 @@ curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in
 exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the tau in ms at the 20,40,60 and quantile of the prior.
 ```
 
-## exmaine these priors
+## sampling data in brms usingthe defined priors
 
 ```
 library(brms)
