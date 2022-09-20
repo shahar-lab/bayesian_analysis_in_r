@@ -1,4 +1,4 @@
-# examine priors (intercept only)
+## examine priors (intercept only)
 
 we can start by initilazing some brms model. this is just to compile a model we can later change. not data is only a placeholder required by brms. we will only sample from the priors here.
 
