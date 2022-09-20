@@ -5,10 +5,10 @@ This code will walk you through prior testing for exGaussian sampling. The idea 
 Lets start by visually and manullay examining some possible distrbutions for our priors.
 This is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale.
 What we want to get here, is exgaussian distrbutions that will get us resnoable estimates for rts.
-It would be nice to see the meanrt set aroun 500ms, sigma around 50ms, and tau around 150
+It would be nice to see the meanrt set aroun 500ms, sigma around 50ms, and tau around 150ms.
 
 #### examining our priors for sigma:
-we will set a tau mean and sd (putting care into the log transformation)
+We will set a tau mean and sd (putting care into the log transformation)
 and then visually examine the prior and use common sense. 
 usually sigma estimates should get around 50ms values as a prior for an intercept
 the last line of the next code will get you the 20th,40th,60th, and 8th percntile of the prior distrbution in ms
