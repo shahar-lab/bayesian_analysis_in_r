@@ -74,7 +74,7 @@ model<-
       family      = myfamily,
       data        = df, 
       sample_prior='only',
-      iter        = 1,  
+      iter        = 10000, #should go quick since we have no posterior  
       warmup      = 1,
       cores       = 1, 
       chains      = 1, 
