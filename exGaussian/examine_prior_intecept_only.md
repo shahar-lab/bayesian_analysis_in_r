@@ -72,6 +72,7 @@ myprior  = c(
 model<-
   brm(myformula,
       prior=myprior,
+      sample_prior='only', 
       family      = myfamily,
       data        = df, 
       sample_prior='only',
