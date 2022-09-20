@@ -1,4 +1,4 @@
-# This is the model block stan uses when using an exGaussian family with a 'log' ling for both beta and sigma
+# This is the model block stan uses when using an exGaussian family with a 'log' link for both beta and sigma
 
 So we can see that a few important thing are happening here:<br/>
 (1) mu is the RT mean (not the exguassian 'mu' which is [mu - beta] here)<br/>
