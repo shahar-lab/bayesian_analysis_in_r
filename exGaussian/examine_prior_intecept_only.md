@@ -1,5 +1,6 @@
 ## examine priors (intercept only)
 
+### initilize and compile
 we can start by initilazing some brms model. this is just to compile a model we can later change. not data is only a placeholder required by brms. we will only sample from the priors here.
 
 ```
@@ -41,7 +42,7 @@ stancode(model)
 
 now we can visullay examine some prior. this is important since we are dealing with a 'log' link meaning we need to set the prior on the log scale
 
-# examining our priors for sigma:
+### examining our priors for sigma:
 we will set a tau mean and sd (putting care into the log transformation)
 and then visually examine the prior and use common sense. 
 usually sigma estimates should get around 50ms values as a prior for an intercept
@@ -57,7 +58,7 @@ curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in
 exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
 ```
 
-# examining our priors for tau (the same way as sigma)
+### examining our priors for tau (the same way as sigma)
 usually tau estimates should get around 150ms values as a prior for an intercept
 ```
 priormean = log(150/1000) #this will be our tau prior mean for 50ms
@@ -68,6 +69,7 @@ curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) #this is the prior in
 exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the tau in ms at the 20,40,60 and quantile of the prior.
 ```
 
+### simulating rts from the prior
 now we can test these priors by actually sampling rt in brms from these priors
 here we will set meanrt prior around 500ms, sigma around 50ms, tau around 150ms.
 
