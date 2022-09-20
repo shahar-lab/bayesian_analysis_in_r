@@ -3,7 +3,6 @@
 So we can see that a few important thing are happening here:<br/>
 (1) mu is the RT mean (not the exguassian 'mu' which is [mu - beta] here)<br/>
 (2) sigma has an exp() transformation. So if stan sampled sigma = 0 for one itreation, exp_mod_normal_lpdf will get exp(0). <br/>
-Also important here is that for some reason the sigma transfomation applys only when sampling with data, but not when sampling only priors, when prior='only'
 (3) Beta is the tau parameter in the exgaussian.Like sigma, it has an exp() transformation. This is true fro both when sampling with empirical data and when using prior='only'.<br/>
 (4) The likelihood function actually gets lambda which is inv(beta) but this doesn't affect us since we are usually intrested in beta (tau), not lambda<br/>
 <br/>
