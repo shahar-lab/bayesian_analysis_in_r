@@ -23,7 +23,7 @@ x=seq(-4,4,0.001)
 curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) 
 
 #get some quantiles in ms scale
-exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
+exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 
 ```
 
 #### examining our priors for tau (the same way as sigma)
@@ -37,7 +37,7 @@ x=seq(-4,4,0.001)
 curve(dnorm(x,mean=priormean,sd=priorsd), from=-10, to=10) 
 
 #get some quantiles in ms scale
-exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 #lets see what will be the estimate in ms at the 20,40,60 and quantile of the prior.
+exp(qnorm(c(.20,.40,.60,.80),mean=priormean,sd=priorsd))*1000 
 ```
 
 ## sampling data in brms usingthe defined priors
