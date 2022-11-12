@@ -6,6 +6,24 @@ library(brms)
 library(bayestestR)
 rm(list=ls())
 
+###visually test some priors
+#we want the effects on the mean rt to be around about 50-100ms and 25-50 from tau
+# examine tau prior for the effect
+priormean = log((0+150)/1000) - log(150/1000) 
+priorsd   = 1
+
+#get some quantiles in ms scale with the effect (b0+b1*1)
+x=exp(rnorm(1000,-1.89712,1)+rnorm(1000,0,1))
+quantile(x,c(.20,.40,.60,.80))*1000 
+
+
+#compare to some quantiles in ms scale without the effect (b0+b1*0)
+x=exp(rnorm(1000,-1.89712,1))
+quantile(x,c(.20,.40,.60,.80))*1000 
+
+
+
+
 ####prior sampling
 
 #load data 
@@ -39,13 +57,13 @@ myprior  = c(
   set_prior(prior="normal(0  ,0.1)", class="b", coef="stage:groupADHD",dpar=""),
   
   #sigma
-  set_prior(prior="normal(-2.995732, 0.5)", class="b", coef="Intercept", dpar="sigma"),
+  set_prior(prior="normal(-2.995732, 1.5)", class="b", coef="Intercept", dpar="sigma"),
   
   #tau
-  set_prior(prior="normal(-1.89712,  0.5)", class="b", coef="Intercept"      ,dpar="beta"),
-  set_prior(prior="normal(0       ,  0.5)", class="b"  , coef="groupADHD"      ,dpar="beta"),
-  set_prior(prior="normal(0       ,  0.5)", class="b"  , coef="stage"          ,dpar="beta"),
-  set_prior(prior="normal(0       ,  0.5)", class="b"  , coef="stage:groupADHD",dpar="beta")
+  set_prior(prior="normal(-1.89712,  1)", class="b", coef="Intercept"      ,dpar="beta"),
+  set_prior(prior="normal(0       ,  1)", class="b"  , coef="groupADHD"      ,dpar="beta"),
+  set_prior(prior="normal(0       ,  1)", class="b"  , coef="stage"          ,dpar="beta"),
+  set_prior(prior="normal(0       ,  1)", class="b"  , coef="stage:groupADHD",dpar="beta")
   
 )
 
